@@ -23,6 +23,6 @@ namespace FoodDelivery.Models
         [MinLength(1, ErrorMessage = "The address is too short.")]
         public string Address { get; set; }
 
-        public DishInBasket DishInBasket { get; set; }
+        public DishInBasket? DishInBasket { get; set; }
     }
 }

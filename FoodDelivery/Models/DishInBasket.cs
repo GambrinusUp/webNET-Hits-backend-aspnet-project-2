@@ -6,6 +6,6 @@
         
         public User User { get; set; }
 
-        public Dictionary<Dish, int> people = new Dictionary<Dish, int>();
+        public ICollection<NumberOfDishes> Dishes = new HashSet<NumberOfDishes>();
     }
 }
