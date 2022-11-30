@@ -5,7 +5,7 @@ namespace FoodDelivery.Models
 {
     public class User
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The fullname is too short.")]
@@ -29,8 +29,6 @@ namespace FoodDelivery.Models
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
 
-        public Dictionary<Dish, Rating> people = new Dictionary<Dish, Rating>();
-
-        public ICollection<Order> orders = new List<Order>();
+        public ICollection<Order> orders = new HashSet<Order>();
     }
 }
