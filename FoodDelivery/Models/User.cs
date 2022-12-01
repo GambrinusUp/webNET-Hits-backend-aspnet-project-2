@@ -26,6 +26,11 @@ namespace FoodDelivery.Models
         public string? Email { get; set; }
 
         [Required]
+        [MinLength(6, ErrorMessage = "The password is too short.")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
 
