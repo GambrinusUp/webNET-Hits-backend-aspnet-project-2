@@ -12,6 +12,7 @@ namespace FoodDelivery.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<UserReview> RatingUserReviews { get; set; }
         public DbSet<NumberOfDishes> NumberOfDishes { get; set; }
+        public DbSet<LogoutTokens> LogoutTokens { get; set; }
 
         public Context(DbContextOptions<Context> options): base(options)
         {
@@ -26,6 +27,7 @@ namespace FoodDelivery.Models
             modelBuilder.Entity<Order>().HasKey(x => x.Id);
             modelBuilder.Entity<UserReview>().HasKey(x => x.Id);
             modelBuilder.Entity<NumberOfDishes>().HasKey(x => x.Id);
+            modelBuilder.Entity<LogoutTokens>().HasKey(x => x.Id);
         }
 
         public User? GetUserByToken(string token)

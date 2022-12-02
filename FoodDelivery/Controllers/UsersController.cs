@@ -6,16 +6,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using FoodDelivery.Services;
 using FoodDelivery.Models.DTO;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
 
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
     private readonly IUsersService _usersService;
+    private readonly ILogoutService _logoutService;
 
-    public UsersController(IUsersService usersService)
+    public UsersController(IUsersService usersService, ILogoutService logoutService)
     {
         _usersService = usersService;
+        _logoutService = logoutService;
     }
 
     [HttpPost("register")]
@@ -59,8 +63,9 @@ public class UsersController : ControllerBase
     public IActionResult GetProfile()
     {
         string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
-        //if (_logoutService.IsUserLoggedOut(token))
-          //  return Unauthorized();
+
+        if (_logoutService.IsUserLogout(token))
+            return Unauthorized();
 
         try
         {
@@ -97,5 +102,22 @@ public class UsersController : ControllerBase
         }
         return BadRequest(new { errorText = "Invalid data." });
 
+    }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+
+        if (_logoutService.IsUserLogout(token))
+            return Unauthorized(new { errorText = "The user is unauthorized." });
+
+        try
+        {
+            _logoutService.Logout(token);
+
+            return Ok();
+        }
+        catch { return BadRequest(new { errorText = "Internal error" }); }
     }
 }
