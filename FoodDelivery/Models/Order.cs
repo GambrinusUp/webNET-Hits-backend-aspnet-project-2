@@ -6,6 +6,7 @@ namespace FoodDelivery.Models
 {
     public class Order
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -24,5 +25,8 @@ namespace FoodDelivery.Models
         public string Address { get; set; }
 
         public DishInBasket? DishInBasket { get; set; }
+
+        //public int? UserId { get; set; }
+        public ICollection<User> Users = new List<User>();
     }
 }

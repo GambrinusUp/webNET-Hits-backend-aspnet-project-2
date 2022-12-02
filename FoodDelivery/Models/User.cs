@@ -1,10 +1,12 @@
 ﻿using FoodDelivery.Models.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FoodDelivery.Models
 {
     public class User
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -23,7 +25,7 @@ namespace FoodDelivery.Models
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid email")]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [MinLength(6, ErrorMessage = "The password is too short.")]
@@ -34,6 +36,11 @@ namespace FoodDelivery.Models
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
 
-        public ICollection<Order> orders = new HashSet<Order>();
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public User()
+        { 
+            Orders = new List<Order>();
+        }
     }
 }

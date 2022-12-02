@@ -54,4 +54,48 @@ public class UsersController : ControllerBase
         }
         return BadRequest(new { errorText = "Login failed" });
     }
+
+    [HttpGet("profile")]
+    public IActionResult GetProfile()
+    {
+        string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+        //if (_logoutService.IsUserLoggedOut(token))
+          //  return Unauthorized();
+
+        try
+        {
+            var user = _usersService.GetUser(token);
+            if (user == null)
+                return BadRequest(new { errorText = "User not found" });
+
+            return Ok(user);
+        }
+        catch
+        {
+            return BadRequest(new { errorText = "Internal error" });
+        }
+    }
+
+    [HttpPut("profile")]
+    public IActionResult EditProfile([FromBody] UserEditDTO model)
+    {
+        //try catch for null token
+        string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+        //if (_logoutService.IsUserLoggedOut(token))
+          //  return Unauthorized();
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                if (_usersService.EditUser(model, token))
+                {
+                    return Ok();
+                }
+            }
+            catch { return BadRequest(new { errorText = "Failed to change user data." }); }
+        }
+        return BadRequest(new { errorText = "Invalid data." });
+
+    }
 }

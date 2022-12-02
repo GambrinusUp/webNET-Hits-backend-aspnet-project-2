@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FoodDelivery.Models
 {
@@ -26,5 +28,14 @@ namespace FoodDelivery.Models
             modelBuilder.Entity<NumberOfDishes>().HasKey(x => x.Id);
         }
 
+        public User? GetUserByToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var email = ((JwtSecurityToken)jsonToken).Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            return Users.Where(x => x.Email == email)
+                .Include(x => x.Orders).ThenInclude(x => x.DishInBasket)
+                .FirstOrDefault();
+        }
     }
 }
