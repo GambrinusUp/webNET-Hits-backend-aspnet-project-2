@@ -86,8 +86,8 @@ public class UsersController : ControllerBase
     {
         //try catch for null token
         string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
-        //if (_logoutService.IsUserLoggedOut(token))
-          //  return Unauthorized();
+        if (_logoutService.IsUserLogout(token))
+            return Unauthorized();
 
         if (ModelState.IsValid)
         {
