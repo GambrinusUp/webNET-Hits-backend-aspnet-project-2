@@ -16,6 +16,8 @@ namespace FoodDelivery.Models.DTO
 
         public double Price { get; set; }
 
+        public string? Image { get; set; }
+
         public bool Vegetarian { get; set; } = false;
 
         public double? Rating { get; set; }

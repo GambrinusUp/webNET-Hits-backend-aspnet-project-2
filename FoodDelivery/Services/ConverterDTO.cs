@@ -37,5 +37,26 @@ namespace FoodDelivery.Services
                 PhoneNumber = user.PhoneNumber
             };
         }
+
+        public static ICollection<DishDTO?> Dishes(ICollection<Dish> dishes)
+        {
+            ICollection<DishDTO?> resultDishes = new List<DishDTO?>();
+            foreach (var dish in dishes)
+            {
+                resultDishes.Add(new DishDTO
+                {
+                    Id = dish.Id,
+                    Name = dish.Name,
+                    Description = dish.Description,
+                    Price = dish.Price,
+                    Image = dish.Image,
+                    Vegetarian = dish.Vegetarian,
+                    Rating = dish.Rating,
+                    Dish = dish.DishCategory
+                });
+            }
+
+            return resultDishes;
+        }
     }
 }
