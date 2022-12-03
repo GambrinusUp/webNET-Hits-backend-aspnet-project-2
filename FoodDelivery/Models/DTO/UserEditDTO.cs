@@ -17,9 +17,7 @@ namespace FoodDelivery.Models.DTO
         [EnumDataType(typeof(Gender), ErrorMessage = "Invalid gender")]
         public Gender Gender { get; set; }
 
-        [Required]
-        [EmailAddress(ErrorMessage = "Invalid email")]
-        public string? Email { get; set; }
+        public string? Address { get; set; }
 
         [Required]
         [Phone(ErrorMessage = "Invalid phone number")]

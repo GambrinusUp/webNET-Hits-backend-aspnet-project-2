@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "3SgBq5zA0A7qnI/gVjAa0/noILu7n1aX0Q6JGNbNepX+Q+x8bNc5bBHiaombgxlVQNWXYhZiWEydoW0UuZ7Emg==",
+  "dgSpecHash": "OOGeyecthZxriptFHGSb3r7jABqjwen47rUjhFB/IFH5y6oovaJbEmgXi4UcDitVsveyHFe//Y7W7kJmX6+cZg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Andrey\\source\\repos\\webNET-Hits-backend-aspnet-project-2\\FoodDelivery\\FoodDelivery.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrey\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Andrey\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\Andrey\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Andrey\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.11\\microsoft.aspnetcore.authentication.jwtbearer.6.0.11.nupkg.sha512",
     "C:\\Users\\Andrey\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Andrey\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Andrey\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",

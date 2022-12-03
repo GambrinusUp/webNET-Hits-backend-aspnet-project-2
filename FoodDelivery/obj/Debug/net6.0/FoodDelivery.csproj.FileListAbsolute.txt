@@ -137,3 +137,4 @@ C:\Users\Andrey\source\repos\webNET-Hits-backend-aspnet-project-2\FoodDelivery\o
 C:\Users\Andrey\source\repos\webNET-Hits-backend-aspnet-project-2\FoodDelivery\obj\Debug\net6.0\FoodDelivery.pdb
 C:\Users\Andrey\source\repos\webNET-Hits-backend-aspnet-project-2\FoodDelivery\obj\Debug\net6.0\FoodDelivery.genruntimeconfig.cache
 C:\Users\Andrey\source\repos\webNET-Hits-backend-aspnet-project-2\FoodDelivery\obj\Debug\net6.0\ref\FoodDelivery.dll
+C:\Users\Andrey\source\repos\webNET-Hits-backend-aspnet-project-2\FoodDelivery\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

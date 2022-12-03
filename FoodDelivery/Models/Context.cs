@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FoodDelivery.Models
 {
@@ -10,6 +12,7 @@ namespace FoodDelivery.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<UserReview> RatingUserReviews { get; set; }
         public DbSet<NumberOfDishes> NumberOfDishes { get; set; }
+        public DbSet<LogoutTokens> LogoutTokens { get; set; }
 
         public Context(DbContextOptions<Context> options): base(options)
         {
@@ -24,7 +27,17 @@ namespace FoodDelivery.Models
             modelBuilder.Entity<Order>().HasKey(x => x.Id);
             modelBuilder.Entity<UserReview>().HasKey(x => x.Id);
             modelBuilder.Entity<NumberOfDishes>().HasKey(x => x.Id);
+            modelBuilder.Entity<LogoutTokens>().HasKey(x => x.Id);
         }
 
+        public User? GetUserByToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var email = ((JwtSecurityToken)jsonToken).Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            return Users.Where(x => x.Email == email)
+                .Include(x => x.Orders).ThenInclude(x => x.DishInBasket)
+                .FirstOrDefault();
+        }
     }
 }
