@@ -11,6 +11,7 @@ namespace FoodDelivery.Services
     {
         DishPagedListDTO? GetDishPagedList(DishCategory[] categories, bool vegetarian,
             DishSorting sorting, int page);
+        DishDTO? GetDish(Guid id);
     }
     public class DishService : IDishService
     {
@@ -94,6 +95,16 @@ namespace FoodDelivery.Services
                 Dishes = ConverterDTO.Dishes(dishesOfPage),
                 Pagination = pageInfo
             };
+        }
+
+        public DishDTO? GetDish(Guid id)
+        {
+            var dish = _context.GetDishById(id);
+
+            if (dish == null)
+                return null;
+
+            return ConverterDTO.Dish(dish);
         }
     }
 }

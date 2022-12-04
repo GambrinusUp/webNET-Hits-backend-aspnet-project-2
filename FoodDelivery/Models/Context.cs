@@ -39,5 +39,10 @@ namespace FoodDelivery.Models
                 .Include(x => x.Orders).ThenInclude(x => x.DishInBasket)
                 .FirstOrDefault();
         }
+
+        public Dish? GetDishById(Guid id)
+        {
+            return Dishes.Where(x => x.Id == id).FirstOrDefault();
+        }
     }
 }

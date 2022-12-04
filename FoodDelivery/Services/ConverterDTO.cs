@@ -58,5 +58,20 @@ namespace FoodDelivery.Services
 
             return resultDishes;
         }
+
+        public static DishDTO? Dish(Dish dish)
+        {
+            return new DishDTO
+            {
+                Id = dish.Id,
+                Name = dish.Name,
+                Description = dish.Description,
+                Price = dish.Price,
+                Image = dish.Image,
+                Vegetarian = dish.Vegetarian,
+                Rating = dish.Rating,
+                Dish = dish.DishCategory
+            };
+        }
     }
 }
