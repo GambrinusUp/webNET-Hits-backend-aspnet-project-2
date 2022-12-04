@@ -20,7 +20,7 @@ namespace FoodDelivery.Models
 
         public bool Vegetarian { get; set; } = false;
 
-        public int Rating = 0;
+        public double Rating { get; set; } = 0;
 
         [EnumDataType(typeof(DishCategory), ErrorMessage = "Invalid dish category")]
         public DishCategory DishCategory { get; set; }

@@ -23,19 +23,19 @@ namespace FoodDelivery.Controllers
         {
             if (page <= 0)
                 return BadRequest(new { errorText = "Incorrect page number" });
-            try
-            {
+            //try
+            //{
                 DishPagedListDTO? pageList = _dishService.GetDishPagedList(categories, vegetarian, sorting, page);
                 if (pageList == null)
                     return BadRequest(new { errorText = "Incorrect page number" });
 
                 return Ok(pageList);
-            }
-            catch
-            {
+            //}
+            //catch
+            //{
                 //переделать на 500 код
-                return BadRequest(new { errorText = "Internal error" });
-            }
+            //    return BadRequest(new { errorText = "Internal error" });
+            //}
         }
     }
 }

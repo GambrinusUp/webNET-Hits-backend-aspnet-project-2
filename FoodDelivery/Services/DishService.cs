@@ -3,6 +3,7 @@ using FoodDelivery.Models.DTO;
 using FoodDelivery.Models;
 using FoodDelivery.Models.Enum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace FoodDelivery.Services
 {
@@ -26,11 +27,30 @@ namespace FoodDelivery.Services
             List<Dish> dishes = new();
 
             //сделать сортировку
-
-            if(vegetarian == true)
-                dishes = _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderBy(x => x.Price).ToList();
+            if (vegetarian == true)
+            {
+                dishes = sorting switch
+                {
+                    DishSorting.NameAsc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderBy(s => s.Name).ToList(),
+                    DishSorting.NameDesc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderByDescending(s => s.Name).ToList(),
+                    DishSorting.PriceAsc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderBy(s => s.Price).ToList(),
+                    DishSorting.PriceDesc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderByDescending(s => s.Price).ToList(),
+                    DishSorting.RatingAsc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderBy(s => s.Rating).ToList(),
+                    DishSorting.RatingDesc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderByDescending(s => s.Rating).ToList(),
+                };
+            }
             else
-                dishes = _context.Dishes.OrderBy(x => x.Price).ToList();
+            {
+                dishes = sorting switch
+                {
+                    DishSorting.NameAsc => _context.Dishes.OrderBy(s => s.Name).ToList(),
+                    DishSorting.NameDesc => _context.Dishes.OrderByDescending(s => s.Name).ToList(),
+                    DishSorting.PriceAsc => _context.Dishes.OrderBy(s => s.Price).ToList(),
+                    DishSorting.PriceDesc => _context.Dishes.OrderByDescending(s => s.Price).ToList(),
+                    DishSorting.RatingAsc => _context.Dishes.OrderBy(s => s.Rating).ToList(),
+                    DishSorting.RatingDesc => _context.Dishes.OrderByDescending(s => s.Rating).ToList(),
+                };
+            }
 
             List <Dish> dishesOfPage = new();
 
