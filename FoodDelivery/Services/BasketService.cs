@@ -11,6 +11,7 @@ namespace FoodDelivery.Services
         //Task<string> AddDishToCart(Guid id, string token);
         string AddDishToCart(Guid id, string token);
         BasketDTO? GetUserCart(string token);
+        string DeleteDishFromCart(Guid id, bool increase, string token);
     }
 
     public class BasketService : IBasketService
@@ -39,7 +40,7 @@ namespace FoodDelivery.Services
                         dishBasket.Amount = dishBasket.Amount + 1;
                         dishBasket.TotalPrice = dish.Price * dishBasket.Amount;
                         _context.SaveChanges();
-                        return "dish in basket";
+                        return "another one dish in basket";
                     }
                 }
                 dishInBasket = new DishBasket
@@ -72,19 +73,6 @@ namespace FoodDelivery.Services
                 _context.SaveChanges();
                 return "dish in basket";
             }
-
-            /*var dishInBasket = new DishBasket
-            {
-                Id = dish.Id,
-                Name = dish.Name,
-                Price = dish.Price,
-                TotalPrice = dish.Price,
-                Amount = 1,
-                Image = dish.Image
-            };*/
-
-            
-            //
         }
 
         public BasketDTO? GetUserCart(string token)
@@ -96,6 +84,41 @@ namespace FoodDelivery.Services
             var basket = user.Cart;
 
             return ConverterDTO.Cart(basket);
+        }
+
+        public string DeleteDishFromCart(Guid id, bool increase, string token)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return null;
+
+            var basket = user.Cart;
+            foreach (DishBasket dishBasket in user.Cart)
+            {
+                if (dishBasket.Id == id)
+                {
+                    if (!increase)
+                    {
+                        user.Cart.Remove(dishBasket);
+                        _context.SaveChanges();
+                        return "the dish is completely removed";
+                    }
+                    else
+                    {
+                        dishBasket.Amount = dishBasket.Amount - 1;
+                        dishBasket.TotalPrice = dishBasket.Price * dishBasket.Amount;
+                        _context.SaveChanges();
+                        if(dishBasket.Amount <= 0)
+                        {
+                            user.Cart.Remove(dishBasket);
+                            _context.SaveChanges();
+                            return "the dish is completely removed";
+                        }
+                        return "the number of dishes has decreased";
+                    }
+                }
+            }
+            return "dish is not found";
         }
     }
 }

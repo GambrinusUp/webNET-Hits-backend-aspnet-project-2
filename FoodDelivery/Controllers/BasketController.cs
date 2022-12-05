@@ -44,5 +44,17 @@ namespace FoodDelivery.Controllers
             //var cart = _basketService.GetUserCart(token);
             return Ok(status);
         }
+
+        [HttpDelete("dish/{dishId}")]
+        public IActionResult DeleteDish(Guid dishId, bool increase = false) 
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            string status = _basketService.DeleteDishFromCart(dishId, increase, token);
+
+            return Ok(status);
+        }
     }
 }
