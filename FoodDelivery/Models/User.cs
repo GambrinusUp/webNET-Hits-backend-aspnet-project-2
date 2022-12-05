@@ -42,5 +42,7 @@ namespace FoodDelivery.Models
         { 
             Orders = new List<Order>();
         }
+
+        //public Basket UserCart { get; set; }
     }
 }
