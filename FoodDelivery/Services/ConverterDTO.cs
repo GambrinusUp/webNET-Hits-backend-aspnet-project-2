@@ -73,5 +73,26 @@ namespace FoodDelivery.Services
                 Dish = dish.DishCategory
             };
         }
+
+        public static DishBasket? DishInBasket(Dish dish)
+        {
+            return new DishBasket
+            {
+                Id = dish.Id,
+                Name = dish.Name,
+                Price = dish.Price,
+                TotalPrice = dish.Price * 1,
+                Amount = 1,
+                Image = dish.Image
+            };
+        }
+
+        public static BasketDTO? Cart(ICollection<DishBasket> basket)
+        {
+            return new BasketDTO
+            {
+                Dishes = basket
+            };
+        }
     }
 }

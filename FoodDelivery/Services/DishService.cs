@@ -30,6 +30,7 @@ namespace FoodDelivery.Services
             //сделать сортировку
             if (vegetarian == true)
             {
+                //вынести в context
                 dishes = sorting switch
                 {
                     DishSorting.NameAsc => _context.Dishes.Where(x => x.Vegetarian == vegetarian).OrderBy(s => s.Name).ToList(),

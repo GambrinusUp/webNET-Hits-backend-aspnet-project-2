@@ -1,4 +1,5 @@
-﻿using FoodDelivery.Models.Enum;
+﻿using FoodDelivery.Models.DTO;
+using FoodDelivery.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,9 +39,12 @@ namespace FoodDelivery.Models
 
         public virtual ICollection<Order> Orders { get; set; }
 
+        public virtual ICollection<DishBasket> Cart { get; set; } 
+
         public User()
         { 
             Orders = new List<Order>();
+            Cart = new List<DishBasket>();
         }
     }
 }

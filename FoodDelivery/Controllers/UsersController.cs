@@ -96,9 +96,7 @@ namespace FoodDelivery.Controllers
                 try
                 {
                     if (_usersService.EditUser(model, token))
-                    {
                         return Ok();
-                    }
                 }
                 catch { return BadRequest(new { errorText = "Failed to change user data." }); }
             }
