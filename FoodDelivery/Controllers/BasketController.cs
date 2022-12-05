@@ -17,23 +17,32 @@ namespace FoodDelivery.Controllers
             _logoutService = logoutService;
         }
 
-        /*[HttpGet]
+        [HttpGet]
         public ActionResult<BasketDTO> GetUserCart()
-        {
-
-        }*/
-
-        /*[HttpPost("dish/{dishId}")]
-        public IActionResult AddDish(Guid Id)
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
                 return Unauthorized();
 
-            //try catch
-            if(_basketService.AddDishToCart(Id, token))
-                return Ok();
-        }*/
+            var cart = _basketService.GetUserCart(token);
+            if (cart == null)
+                return BadRequest(new {message = "Empty cart"});
+            else
+                return Ok(cart);
+            //return BadRequest();
+        }
 
+        [HttpPost("dish/{dishId}")]
+        public IActionResult AddDish(Guid dishId)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            string status = _basketService.AddDishToCart(dishId, token);
+
+            //var cart = _basketService.GetUserCart(token);
+            return Ok(status);
+        }
     }
 }
