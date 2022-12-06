@@ -21,5 +21,8 @@ namespace FoodDelivery.Models
 
         [JsonIgnore]
         public User Users { get; set; }
+
+        //[JsonIgnore]
+        //public Order Orders { get; set; }
     }
 }

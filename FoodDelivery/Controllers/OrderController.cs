@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Services;
 using Microsoft.AspNetCore.Mvc;
+using FoodDelivery.Models.DTO;
 
 namespace FoodDelivery.Controllers
 {
@@ -14,6 +15,21 @@ namespace FoodDelivery.Controllers
         {
             _orderService = orderService;
             _logoutService = logoutService;
+        }
+
+        [HttpPost]
+        public ActionResult<OrderCreateDTO> CreateOrder()
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            var OrderCreateDTO = _orderService.CreateOrderFromBasket(token);
+
+            if(OrderCreateDTO != null)
+                return Ok(OrderCreateDTO);
+            else
+                return BadRequest();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Models;
 using FoodDelivery.Models.DTO;
+using FoodDelivery.Models.Enum;
 
 namespace FoodDelivery.Services
 {
@@ -92,6 +93,18 @@ namespace FoodDelivery.Services
             return new BasketDTO
             {
                 Dishes = basket
+            };
+        }
+
+        public static Order? Order(ICollection<DishBasket> basket, string address)
+        {
+            return new Order
+            {
+                DeliveryTime = DateTime.Now.AddMinutes(30),
+                OrderTime = DateTime.Now,
+                Status = OrderStatus.InProcess,
+                Address = address,
+                DishesInOrder = basket
             };
         }
     }
