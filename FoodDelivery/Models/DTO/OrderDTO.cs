@@ -18,7 +18,7 @@ namespace FoodDelivery.Models.DTO
         [EnumDataType(typeof(OrderStatus), ErrorMessage = "Invalid order status")]
         public OrderStatus Status { get; set; }
 
-        public ICollection<DishBasket>? Dishes { get; set; }
+        public ICollection<DishOrder>? Dishes { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The address is too short.")]

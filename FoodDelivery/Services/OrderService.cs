@@ -56,13 +56,13 @@ namespace FoodDelivery.Services
             if(orders.Count == 0)
                 return null;
 
-            /*foreach(Order order in orders)
+            foreach(Order order in orders)
             {
                 if(order.Id == id)
                 {
                     return ConverterDTO.OrderById(order);
                 }
-            }*/
+            }
 
             return null;
         }

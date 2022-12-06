@@ -156,7 +156,7 @@ namespace FoodDelivery.Services
             };
         }
 
-        /*public static OrderDTO? OrderById(Order order)
+        public static OrderDTO? OrderById(Order order)
         {
             return new OrderDTO
             {
@@ -167,6 +167,6 @@ namespace FoodDelivery.Services
                 Address = order.Address,
                 Dishes = order.DishesInOrder
             };
-        }*/
+        }
     }
 }
