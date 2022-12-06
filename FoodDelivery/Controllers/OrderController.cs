@@ -24,12 +24,23 @@ namespace FoodDelivery.Controllers
             if (_logoutService.IsUserLogout(token))
                 return Unauthorized();
 
-            var OrderCreateDTO = _orderService.CreateOrderFromBasket(token);
+            var orderCreateDTO = _orderService.CreateOrderFromBasket(token);
 
-            if(OrderCreateDTO != null)
-                return Ok(OrderCreateDTO);
+            if(orderCreateDTO != null)
+                return Ok(orderCreateDTO);
             else
                 return BadRequest();
+        }
+
+        [HttpPost("{id}")]
+        public ActionResult<OrderDTO> GetOrderById(Guid id)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            var order = _orderService.GetOrderById(id, token);
+            return Ok(order);
         }
     }
 }

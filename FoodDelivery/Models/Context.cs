@@ -12,6 +12,7 @@ namespace FoodDelivery.Models
         public DbSet<UserReview> RatingUserReviews { get; set; }
         public DbSet<LogoutTokens> LogoutTokens { get; set; }
         public DbSet<DishBasket> DishBasket { get; set; }
+        public DbSet<DishOrder> DishOrder { get; set; }
 
         public Context(DbContextOptions<Context> options): base(options)
         {
@@ -26,6 +27,7 @@ namespace FoodDelivery.Models
             modelBuilder.Entity<UserReview>().HasKey(x => x.Id);
             modelBuilder.Entity<LogoutTokens>().HasKey(x => x.Id);
             modelBuilder.Entity<DishBasket>().HasKey(x => x.Id);
+            modelBuilder.Entity<DishOrder>().HasKey(x => x.Id);
         }
 
         public User? GetUserByToken(string token)
@@ -34,7 +36,7 @@ namespace FoodDelivery.Models
             var jsonToken = handler.ReadToken(token);
             var email = ((JwtSecurityToken)jsonToken).Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
             return Users.Where(x => x.Email == email)
-                //.Include(x => x.Orders)
+                .Include(x => x.Orders).ThenInclude(x => x.DishesInOrder)
                 .Include(x => x.Cart)
                 .FirstOrDefault();
         }

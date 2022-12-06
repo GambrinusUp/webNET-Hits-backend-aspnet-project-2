@@ -25,17 +25,18 @@ namespace FoodDelivery.Models
         [MinLength(1, ErrorMessage = "The address is too short")]
         public string Address { get; set; }
 
-        public virtual ICollection<DishBasket> DishesInOrder { get; set; }
+        public ICollection<DishOrder> DishesInOrder { get; set; } = new List<DishOrder>();
 
         //public ICollection<DishBasketDTO> DishesInOrder { get; set; } = new List<DishBasketDTO>();
 
         //public int? UserId { get; set; }
-        [JsonIgnore]
-        public User Users { get; set; }
 
-        public Order()
+        [JsonIgnore] 
+        public ICollection<User> Users { get; set; } = new List<User>();
+
+        /*public Order()
         {
-            DishesInOrder = new List<DishBasket>();
-        }
+            DishesInOrder = new List<DishOrder>();
+        }*/
     }
 }

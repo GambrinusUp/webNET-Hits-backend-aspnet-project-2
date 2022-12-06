@@ -37,14 +37,14 @@ namespace FoodDelivery.Models
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public virtual ICollection<DishBasket> Cart { get; set; } 
+        public ICollection<DishBasket> Cart { get; set; } = new List<DishBasket>();
 
-        public User()
+        /*public User()
         { 
             Orders = new List<Order>();
             Cart = new List<DishBasket>();
-        }
+        }*/
     }
 }

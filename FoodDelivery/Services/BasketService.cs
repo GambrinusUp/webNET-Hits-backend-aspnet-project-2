@@ -35,7 +35,7 @@ namespace FoodDelivery.Services
             {
                 foreach(DishBasket dishBasket in user.Cart)
                 {
-                    if(dishBasket.Id == id)
+                    if(dishBasket.IdOfDish == id.ToString())
                     {
                         dishBasket.Amount = dishBasket.Amount + 1;
                         dishBasket.TotalPrice = dish.Price * dishBasket.Amount;
@@ -45,7 +45,7 @@ namespace FoodDelivery.Services
                 }
                 dishInBasket = new DishBasket
                 {
-                    Id = dish.Id,
+                    IdOfDish = dish.Id.ToString(),
                     Name = dish.Name,
                     Price = dish.Price,
                     TotalPrice = dish.Price,
@@ -61,7 +61,7 @@ namespace FoodDelivery.Services
             {
                 dishInBasket = new DishBasket
                 {
-                    Id = dish.Id,
+                    IdOfDish = dish.Id.ToString(),
                     Name = dish.Name,
                     Price = dish.Price,
                     TotalPrice = dish.Price,
@@ -90,15 +90,16 @@ namespace FoodDelivery.Services
         {
             var user = _context.GetUserByToken(token);
             if (user == null)
-                return null;
+                return "user not found";
 
             var basket = user.Cart;
             foreach (DishBasket dishBasket in user.Cart)
             {
-                if (dishBasket.Id == id)
+                if (dishBasket.IdOfDish == id.ToString())
                 {
                     if (!increase)
                     {
+                        _context.DishBasket.Remove(dishBasket); //new
                         user.Cart.Remove(dishBasket);
                         _context.SaveChanges();
                         return "the dish is completely removed";
@@ -110,6 +111,7 @@ namespace FoodDelivery.Services
                         _context.SaveChanges();
                         if(dishBasket.Amount <= 0)
                         {
+                            _context.DishBasket.Remove(dishBasket); //new
                             user.Cart.Remove(dishBasket);
                             _context.SaveChanges();
                             return "the dish is completely removed";

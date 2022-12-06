@@ -6,6 +6,7 @@ namespace FoodDelivery.Services
     public interface IOrderService
     {
         OrderCreateDTO? CreateOrderFromBasket(string token);
+        OrderDTO? GetOrderById(Guid id, string token);
     }
 
     public class OrderService : IOrderService
@@ -29,6 +30,11 @@ namespace FoodDelivery.Services
 
             var order = ConverterDTO.Order(basket, user.Address);
 
+            //
+            foreach(var dish in ConverterDTO.DishInOrders(basket))
+            {
+                _context.DishOrder.Add(dish);
+            }
             user.Orders.Add(order);
             user.Cart.Clear();
             _context.SaveChanges();
@@ -38,6 +44,27 @@ namespace FoodDelivery.Services
                 Address = order.Address,
                 DeliveryTime = order.DeliveryTime
             };
+        }
+
+        public OrderDTO? GetOrderById(Guid id, string token)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return null;
+
+            var orders = user.Orders;
+            if(orders.Count == 0)
+                return null;
+
+            /*foreach(Order order in orders)
+            {
+                if(order.Id == id)
+                {
+                    return ConverterDTO.OrderById(order);
+                }
+            }*/
+
+            return null;
         }
     }
 }

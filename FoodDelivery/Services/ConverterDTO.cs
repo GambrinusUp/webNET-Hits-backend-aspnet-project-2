@@ -90,22 +90,83 @@ namespace FoodDelivery.Services
 
         public static BasketDTO? Cart(ICollection<DishBasket> basket)
         {
+            ICollection<DishBasketDTO> resultDishes = new List<DishBasketDTO>();
+            foreach (var dish in basket)
+            {
+                resultDishes.Add(new DishBasketDTO
+                {
+                    Id = dish.IdOfDish,
+                    Name = dish.Name,
+                    Price = dish.Price,
+                    TotalPrice = dish.TotalPrice,
+                    Amount = dish.Amount,
+                    Image = dish.Image
+                });
+            }
+
             return new BasketDTO
             {
-                Dishes = basket
+                Dishes = resultDishes
             };
+        }
+
+        public static ICollection<DishOrder> DishInOrders(ICollection<DishBasket> dishBaskets)
+        {
+            ICollection<DishOrder> resultDishes = new List<DishOrder>();
+            foreach (var dish in dishBaskets)
+            {
+                resultDishes.Add(new DishOrder
+                {
+                    IdOfDish = dish.Id.ToString(),
+                    Name = dish.Name,
+                    Price = dish.Price,
+                    TotalPrice = dish.TotalPrice,
+                    Amount = dish.Amount,
+                    Image = dish.Image
+                });
+            }
+
+            return resultDishes;
         }
 
         public static Order? Order(ICollection<DishBasket> basket, string address)
         {
+            /*ICollection<DishOrder?> resultDishes = new List<DishOrder?>();
+            foreach (var dish in basket)
+            {
+                resultDishes.Add(new DishOrder
+                {
+                    Id = dish.Id,
+                    Name = dish.Name,
+                    Price = dish.Price,
+                    TotalPrice = dish.TotalPrice,
+                    Amount = dish.Amount,
+                    Image = dish.Image
+                });
+            }*/
+
+
             return new Order
             {
                 DeliveryTime = DateTime.Now.AddMinutes(30),
                 OrderTime = DateTime.Now,
                 Status = OrderStatus.InProcess,
                 Address = address,
-                DishesInOrder = basket
+                DishesInOrder = ConverterDTO.DishInOrders(basket)
             };
         }
+
+        /*public static OrderDTO? OrderById(Order order)
+        {
+            return new OrderDTO
+            {
+                Id = order.Id,
+                DeliveryTime = order.DeliveryTime,
+                OrderTime = order.OrderTime,
+                Status = order.Status,
+                Address = order.Address,
+                Dishes = order.DishesInOrder
+            };
+        }*/
     }
 }

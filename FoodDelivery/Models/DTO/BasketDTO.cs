@@ -2,6 +2,6 @@
 {
     public class BasketDTO
     {
-        public ICollection<DishBasket> Dishes { get; set; }
+        public ICollection<DishBasketDTO> Dishes { get; set; }
     }
 }
