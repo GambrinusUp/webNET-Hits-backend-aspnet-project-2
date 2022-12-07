@@ -49,8 +49,21 @@ namespace FoodDelivery.Controllers
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
                 return Unauthorized();
+
             var orderlist = _orderService.GetOrderList(token);
             return Ok(orderlist);
+        }
+
+        [HttpPost("{id}/status")]
+        public IActionResult ConfirmOrderDelivery(Guid id)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+            //дрбавить проверку на подтвержденный заказ
+            string status = _orderService.ConfirmDelivery(token, id);
+
+            return Ok(new { message = status });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Models.DTO;
 using FoodDelivery.Models;
+using FoodDelivery.Models.Enum;
 
 namespace FoodDelivery.Services
 {
@@ -8,6 +9,7 @@ namespace FoodDelivery.Services
         OrderCreateDTO? CreateOrderFromBasket(string token);
         OrderDTO? GetOrderById(Guid id, string token);
         OrderListDTO GetOrderList(string token);
+        string ConfirmDelivery(string token, Guid id);
     }
 
     public class OrderService : IOrderService
@@ -70,6 +72,7 @@ namespace FoodDelivery.Services
 
             return null;
         }
+
         public OrderListDTO? GetOrderList(string token)
         {
             var user = _context.GetUserByToken(token);
@@ -91,6 +94,29 @@ namespace FoodDelivery.Services
             }
 
             return orderlist;
+        }
+
+        public string ConfirmDelivery(string token, Guid id)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return "user not found";
+
+            var orders = user.Orders;
+            if (orders.Count == 0)
+                return "orders not found";
+
+            foreach (Order order in orders)
+            {
+                if (order.Id == id)
+                {
+                    order.Status = OrderStatus.Delivered;
+                    _context.SaveChanges();
+                    return "confirmed";
+                }
+            }
+
+            return "order not found";
         }
     }
 }
