@@ -152,6 +152,7 @@ namespace FoodDelivery.Services
                 OrderTime = DateTime.Now,
                 Status = OrderStatus.InProcess,
                 Address = address,
+                Price = 0,
                 DishesInOrder = ConverterDTO.DishInOrders(basket)
             };
         }
@@ -165,7 +166,20 @@ namespace FoodDelivery.Services
                 OrderTime = order.OrderTime,
                 Status = order.Status,
                 Address = order.Address,
+                Price = order.Price,
                 Dishes = order.DishesInOrder
+            };
+        }
+
+        public static OrderInfoDTO? OrderInfo(Order order)
+        {
+            return new OrderInfoDTO
+            {
+                Id = order.Id,
+                DeliveryTime = order.DeliveryTime,
+                OrderTime = order.OrderTime,
+                Status = order.Status,
+                Price = order.Price
             };
         }
     }

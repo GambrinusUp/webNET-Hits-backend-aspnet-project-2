@@ -7,6 +7,7 @@ namespace FoodDelivery.Services
     {
         OrderCreateDTO? CreateOrderFromBasket(string token);
         OrderDTO? GetOrderById(Guid id, string token);
+        OrderListDTO GetOrderList(string token);
     }
 
     public class OrderService : IOrderService
@@ -30,11 +31,14 @@ namespace FoodDelivery.Services
 
             var order = ConverterDTO.Order(basket, user.Address);
 
-            //
+            //Проверить price
+            double price = 0;
             foreach(var dish in ConverterDTO.DishInOrders(basket))
             {
+                price += dish.TotalPrice;
                 _context.DishOrder.Add(dish);
             }
+            order.Price = price;
             user.Orders.Add(order);
             user.Cart.Clear();
             _context.SaveChanges();
@@ -65,6 +69,28 @@ namespace FoodDelivery.Services
             }
 
             return null;
+        }
+        public OrderListDTO? GetOrderList(string token)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return null;
+
+            var orders = user.Orders;
+            if (orders.Count == 0)
+                return null;
+
+            OrderListDTO? orderlist = new();
+
+            //ICollection<OrderInfoDTO?> orderList = new List<OrderInfoDTO?>();
+
+            foreach (Order order in orders)
+            {
+                //orderList.Add(ConverterDTO.OrderInfo(order));
+                orderlist.OrderList.Add(ConverterDTO.OrderInfo(order));
+            }
+
+            return orderlist;
         }
     }
 }

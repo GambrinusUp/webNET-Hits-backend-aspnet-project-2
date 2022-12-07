@@ -32,15 +32,25 @@ namespace FoodDelivery.Controllers
                 return BadRequest();
         }
 
-        [HttpPost("{id}")]
+        [HttpGet("{id}")]
         public ActionResult<OrderDTO> GetOrderById(Guid id)
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
                 return Unauthorized();
-
+            //сделать статускод для null
             var order = _orderService.GetOrderById(id, token);
             return Ok(order);
+        }
+
+        [HttpGet]
+        public ActionResult<OrderListDTO> GetOrderList()
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+            var orderlist = _orderService.GetOrderList(token);
+            return Ok(orderlist);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace FoodDelivery.Models.DTO
         [EnumDataType(typeof(OrderStatus), ErrorMessage = "Invalid order status")]
         public OrderStatus Status { get; set; }
 
+        public double Price { get; set; }
+
         public ICollection<DishOrder>? Dishes { get; set; }
 
         [Required]
