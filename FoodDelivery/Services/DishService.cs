@@ -12,6 +12,7 @@ namespace FoodDelivery.Services
         DishPagedListDTO? GetDishPagedList(DishCategory[] categories, bool vegetarian,
             DishSorting sorting, int page);
         DishDTO? GetDish(Guid id);
+        bool Check(Guid id, string token);
     }
     public class DishService : IDishService
     {
@@ -106,6 +107,30 @@ namespace FoodDelivery.Services
                 return null;
 
             return ConverterDTO.Dish(dish);
+        }
+
+        public bool Check(Guid id, string token)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return false;
+
+            var orders = user.Orders;
+            if (orders.Count == 0)
+                return false;
+
+            foreach (var order in orders) 
+            { 
+                foreach(var dish in order.DishesInOrder)
+                {
+                    if (dish.IdOfDish == id.ToString())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

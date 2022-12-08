@@ -11,10 +11,12 @@ namespace FoodDelivery.Controllers
     public class DishController : ControllerBase
     {
         private readonly IDishService _dishService;
+        private readonly ILogoutService _logoutService;
 
-        public DishController(IDishService dishService)
+        public DishController(IDishService dishService, ILogoutService logoutService)
         {
             _dishService = dishService;
+            _logoutService = logoutService;
         }
 
         [HttpGet]
@@ -54,6 +56,17 @@ namespace FoodDelivery.Controllers
             {
                 return BadRequest(new { errorText = "Internal error" });
             }
+        }
+        [HttpPost("{id}/rating/check")]
+        public ActionResult<bool> Check(Guid id)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            bool check = _dishService.Check(id, token);
+
+            return check;
         }
     }
 }
