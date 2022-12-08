@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace FoodDelivery.Models.DTO
+namespace FoodDelivery.Models
 {
-    public class DishBasketDTO
+    public class DishOrder
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+
+        public string IdOfDish { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The name is too short.")]
@@ -17,5 +20,8 @@ namespace FoodDelivery.Models.DTO
         public int Amount { get; set; }
 
         public string? Image { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Order> Orders { get; set; }  = new List<Order>();
     }
 }

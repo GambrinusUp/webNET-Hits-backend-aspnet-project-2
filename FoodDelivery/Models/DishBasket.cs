@@ -6,6 +6,7 @@ namespace FoodDelivery.Models
     public class DishBasket
     {
         public Guid Id { get; set; }
+        public string IdOfDish { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The name is too short.")]
@@ -20,6 +21,6 @@ namespace FoodDelivery.Models
         public string? Image { get; set; }
 
         [JsonIgnore]
-        public User Users { get; set; }
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }
