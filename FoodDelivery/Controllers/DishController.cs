@@ -57,6 +57,7 @@ namespace FoodDelivery.Controllers
                 return BadRequest(new { errorText = "Internal error" });
             }
         }
+
         [HttpPost("{id}/rating/check")]
         public ActionResult<bool> Check(Guid id)
         {
@@ -67,6 +68,22 @@ namespace FoodDelivery.Controllers
             bool check = _dishService.Check(id, token);
 
             return check;
+        }
+
+        [HttpPost("{id}/rating")]
+        public IActionResult SetRating(Guid id, int ratingScore) 
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+            if (_logoutService.IsUserLogout(token))
+                return Unauthorized();
+
+            string status = _dishService.Set(id, token, ratingScore);
+
+            if (status == "the rating is set")
+                return Ok(status);
+            if (status == "user not found" || status == "dish not found")
+                return NotFound(status);
+            return BadRequest(status);
         }
     }
 }

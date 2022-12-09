@@ -29,16 +29,7 @@ namespace FoodDelivery.Models
 
         public ICollection<DishOrder> DishesInOrder { get; set; } = new List<DishOrder>();
 
-        //public ICollection<DishBasketDTO> DishesInOrder { get; set; } = new List<DishBasketDTO>();
-
-        //public int? UserId { get; set; }
-
         [JsonIgnore] 
         public ICollection<User> Users { get; set; } = new List<User>();
-
-        /*public Order()
-        {
-            DishesInOrder = new List<DishOrder>();
-        }*/
     }
 }

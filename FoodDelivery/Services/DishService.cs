@@ -13,6 +13,7 @@ namespace FoodDelivery.Services
             DishSorting sorting, int page);
         DishDTO? GetDish(Guid id);
         bool Check(Guid id, string token);
+        string Set(Guid id, string token, int rating);
     }
     public class DishService : IDishService
     {
@@ -131,6 +132,39 @@ namespace FoodDelivery.Services
             }
 
             return false;
+        }
+
+        public string Set(Guid id, string token, int rating)
+        {
+            var user = _context.GetUserByToken(token);
+            if (user == null)
+                return "user not found";
+
+            var dish = _context.GetDishById(id);
+            if (dish == null)
+                return "dish not found";
+
+            //var reviews = _context.RatingUserReviews.ToList();
+
+            if (Check(id, token))
+            {
+                var review = ConverterDTO.Review(user, dish, rating);
+                _context.RatingUserReviews.Add(review);
+                _context.SaveChanges();
+                double avgrating = 0;
+                var reviews = _context.RatingUserReviews.Include(x => x.User).Include(x => x.Dish).ToList();
+                foreach (var reviewscore in reviews)
+                {
+                    if(reviewscore.Dish.Id == id)
+                        avgrating += reviewscore.Rating;
+                }
+                avgrating = avgrating / reviews.Count();
+                dish.Rating = avgrating;
+                _context.SaveChanges();
+                return reviews.Count().ToString();
+            }
+
+            return "error";
         }
     }
 }

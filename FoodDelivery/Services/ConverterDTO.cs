@@ -117,7 +117,7 @@ namespace FoodDelivery.Services
             {
                 resultDishes.Add(new DishOrder
                 {
-                    IdOfDish = dish.Id.ToString(),
+                    IdOfDish = dish.IdOfDish.ToString(),
                     Name = dish.Name,
                     Price = dish.Price,
                     TotalPrice = dish.TotalPrice,
@@ -180,6 +180,16 @@ namespace FoodDelivery.Services
                 OrderTime = order.OrderTime,
                 Status = order.Status,
                 Price = order.Price
+            };
+        }
+
+        public static UserReview Review(User user, Dish dish, int rating)
+        {
+            return new UserReview
+            {
+                User = user,
+                Rating = rating,
+                Dish = dish
             };
         }
     }

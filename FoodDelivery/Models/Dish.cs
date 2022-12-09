@@ -1,6 +1,7 @@
 ﻿using FoodDelivery.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using FoodDelivery.Models.DTO;
+using System.Text.Json.Serialization;
 
 namespace FoodDelivery.Models
 {
@@ -25,6 +26,6 @@ namespace FoodDelivery.Models
         [EnumDataType(typeof(DishCategory), ErrorMessage = "Invalid dish category")]
         public DishCategory DishCategory { get; set; }
 
-        public ICollection<UserReview> UserReviews = new HashSet<UserReview>();
+        //public ICollection<UserReview> UserReviews { get; set; } = new List<UserReview>();
     }
 }
