@@ -144,15 +144,34 @@ namespace FoodDelivery.Services
             if (dish == null)
                 return "dish not found";
 
-            //var reviews = _context.RatingUserReviews.ToList();
-
             if (Check(id, token))
             {
                 var review = ConverterDTO.Review(user, dish, rating);
-                _context.RatingUserReviews.Add(review);
-                _context.SaveChanges();
                 double avgrating = 0;
+                //проверка на существующий отзыв
                 var reviews = _context.RatingUserReviews.Include(x => x.User).Include(x => x.Dish).ToList();
+                foreach (var userreview in reviews)
+                {
+                    if(userreview.User.Id == user.Id && userreview.Dish.Id == dish.Id)
+                    {
+                        userreview.Rating = rating;
+                        avgrating = 0;
+                        foreach (var reviewscore in reviews)
+                        {
+                            if (reviewscore.Dish.Id == id)
+                                avgrating += reviewscore.Rating;
+                        }
+                        avgrating = avgrating / reviews.Count();
+                        dish.Rating = avgrating;
+                        _context.SaveChanges();
+                        return "rating changed";
+                    }
+                }
+                _context.RatingUserReviews.Add(review);
+                reviews.Add(review);
+                _context.SaveChanges();
+                avgrating = 0;
+                //reviews = _context.RatingUserReviews.Include(x => x.User).Include(x => x.Dish).ToList();
                 foreach (var reviewscore in reviews)
                 {
                     if(reviewscore.Dish.Id == id)
