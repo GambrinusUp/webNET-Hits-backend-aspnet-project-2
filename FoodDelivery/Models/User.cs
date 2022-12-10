@@ -1,4 +1,5 @@
-﻿using FoodDelivery.Models.Enum;
+﻿using FoodDelivery.Models.DTO;
+using FoodDelivery.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -36,11 +37,14 @@ namespace FoodDelivery.Models
         [Phone(ErrorMessage = "Invalid phone number")]
         public string? PhoneNumber { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public User()
+        public ICollection<DishBasket> Cart { get; set; } = new List<DishBasket>();
+
+        /*public User()
         { 
             Orders = new List<Order>();
-        }
+            Cart = new List<DishBasket>();
+        }*/
     }
 }

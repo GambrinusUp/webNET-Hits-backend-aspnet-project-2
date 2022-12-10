@@ -16,9 +16,11 @@ namespace FoodDelivery.Models.DTO
 
         public double Price { get; set; }
 
+        public string? Image { get; set; }
+
         public bool Vegetarian { get; set; } = false;
 
-        public double? Rating { get; set; }
+        public double Rating { get; set; } = 0;
 
         [EnumDataType(typeof(DishCategory), ErrorMessage = "Invalid dish category")]
         public DishCategory Dish { get; set; }

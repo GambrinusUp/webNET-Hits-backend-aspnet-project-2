@@ -4,6 +4,6 @@
     {
         public ICollection<DishDTO>? Dishes { get; set; }
 
-        public PageInfoDTO PageInfo { get; set; }
+        public PageInfoDTO Pagination { get; set; }
     }
 }

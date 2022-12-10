@@ -1,4 +1,6 @@
-﻿namespace FoodDelivery.Models
+﻿using System.Text.Json.Serialization;
+
+namespace FoodDelivery.Models
 {
     public class UserReview
     {

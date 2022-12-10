@@ -8,11 +8,11 @@ namespace FoodDelivery.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Dish> Dishes{ get; set; }
-        public DbSet<DishInBasket> DishInBaskets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<UserReview> RatingUserReviews { get; set; }
-        public DbSet<NumberOfDishes> NumberOfDishes { get; set; }
         public DbSet<LogoutTokens> LogoutTokens { get; set; }
+        public DbSet<DishBasket> DishBasket { get; set; }
+        public DbSet<DishOrder> DishOrder { get; set; }
 
         public Context(DbContextOptions<Context> options): base(options)
         {
@@ -23,11 +23,11 @@ namespace FoodDelivery.Models
         {
             modelBuilder.Entity<User>().HasKey(x => x.Id);
             modelBuilder.Entity<Dish>().HasKey(x => x.Id);
-            modelBuilder.Entity<DishInBasket>().HasKey(x => x.Id);
             modelBuilder.Entity<Order>().HasKey(x => x.Id);
             modelBuilder.Entity<UserReview>().HasKey(x => x.Id);
-            modelBuilder.Entity<NumberOfDishes>().HasKey(x => x.Id);
             modelBuilder.Entity<LogoutTokens>().HasKey(x => x.Id);
+            modelBuilder.Entity<DishBasket>().HasKey(x => x.Id);
+            modelBuilder.Entity<DishOrder>().HasKey(x => x.Id);
         }
 
         public User? GetUserByToken(string token)
@@ -36,8 +36,14 @@ namespace FoodDelivery.Models
             var jsonToken = handler.ReadToken(token);
             var email = ((JwtSecurityToken)jsonToken).Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
             return Users.Where(x => x.Email == email)
-                .Include(x => x.Orders).ThenInclude(x => x.DishInBasket)
+                .Include(x => x.Orders).ThenInclude(x => x.DishesInOrder)
+                .Include(x => x.Cart)
                 .FirstOrDefault();
+        }
+
+        public Dish? GetDishById(Guid id)
+        {
+            return Dishes.Where(x => x.Id == id).FirstOrDefault();
         }
     }
 }

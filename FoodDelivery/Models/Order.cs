@@ -1,6 +1,7 @@
 ﻿using FoodDelivery.Models.DTO;
 using FoodDelivery.Models.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FoodDelivery.Models
 {
@@ -21,12 +22,14 @@ namespace FoodDelivery.Models
         public OrderStatus Status { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage = "The address is too short.")]
+        [MinLength(1, ErrorMessage = "The address is too short")]
         public string Address { get; set; }
 
-        public DishInBasket? DishInBasket { get; set; }
+        public double Price { get; set; }
 
-        //public int? UserId { get; set; }
-        public ICollection<User> Users = new List<User>();
+        public ICollection<DishOrder> DishesInOrder { get; set; } = new List<DishOrder>();
+
+        [JsonIgnore] 
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

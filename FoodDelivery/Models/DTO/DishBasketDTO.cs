@@ -4,7 +4,7 @@ namespace FoodDelivery.Models.DTO
 {
     public class DishBasketDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The name is too short.")]

@@ -6,14 +6,14 @@ namespace FoodDelivery.Models.DTO
     {
         [Required]
         [Range(1, Int32.MaxValue)]
-        public int PageSize { get; set; }
+        public int Size { get; set; }
 
         [Required]
         [Range(1, Int32.MaxValue)]
-        public int PageCount { get; set; }
+        public int Count { get; set; }
 
         [Required]
         [Range(1, Int32.MaxValue)]
-        public int CurrentPage { get; set; }
+        public int Current { get; set; }
     }
 }
