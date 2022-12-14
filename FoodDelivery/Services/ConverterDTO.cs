@@ -131,21 +131,6 @@ namespace FoodDelivery.Services
 
         public static Order? Order(ICollection<DishBasket> basket, string address)
         {
-            /*ICollection<DishOrder?> resultDishes = new List<DishOrder?>();
-            foreach (var dish in basket)
-            {
-                resultDishes.Add(new DishOrder
-                {
-                    Id = dish.Id,
-                    Name = dish.Name,
-                    Price = dish.Price,
-                    TotalPrice = dish.TotalPrice,
-                    Amount = dish.Amount,
-                    Image = dish.Image
-                });
-            }*/
-
-
             return new Order
             {
                 DeliveryTime = DateTime.Now.AddMinutes(30),
