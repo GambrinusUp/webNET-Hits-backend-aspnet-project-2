@@ -6,7 +6,7 @@ namespace FoodDelivery.Services
     {
         bool IsUserLogout(string token);
 
-        void Logout(string token);
+        Task Logout(string token);
     }
 
     public class LogoutService : ILogoutService
@@ -25,10 +25,10 @@ namespace FoodDelivery.Services
             return true;
         }
 
-        public void Logout(string token)
+        public async Task Logout(string token)
         {
-            _context.LogoutTokens.Add(new LogoutTokens { Token = token });
-            _context.SaveChanges();
+            await _context.LogoutTokens.AddAsync(new LogoutTokens { Token = token });
+            await _context.SaveChangesAsync();
         }
     }
 }

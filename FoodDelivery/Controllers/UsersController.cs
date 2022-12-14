@@ -8,6 +8,8 @@ using FoodDelivery.Services;
 using FoodDelivery.Models.DTO;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDelivery.Controllers
 {
@@ -29,21 +31,28 @@ namespace FoodDelivery.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_usersService.IsUserUnique(model))
+                try
                 {
-                    await _usersService.Register(model);
-                    return new JsonResult(new
+                    if (_usersService.IsUserUnique(model))
                     {
-                        token = _usersService.GetToken(
-                        ConverterDTO.Login(model))
-                    });
+                        await _usersService.Register(model);
+                        return new JsonResult(new
+                        {
+                            token = _usersService.GetToken(
+                            ConverterDTO.Login(model))
+                        });
+                    }
+                    else
+                    {
+                        return Conflict(new { status = HttpStatusCode.Conflict, message = "User already exists" });
+                    }
                 }
-                else
+                catch
                 {
-                    return Conflict(new { errorText = "User already exists" });
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
             }
-            return BadRequest(new { errorText = "Registeration failed" });
+            return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Incorrect data" });
         }
 
         [HttpPost("login")]
@@ -51,46 +60,51 @@ namespace FoodDelivery.Controllers
         {
             if (ModelState.IsValid)
             {
-                var jwt = _usersService.GetToken(userLoginData);
-                if (jwt != null)
+                try
                 {
-                    return new JsonResult(new { token = jwt });
+                    var jwt = _usersService.GetToken(userLoginData);
+                    if (jwt != null)
+                    {
+                        return Ok(new { token = jwt });//new JsonResult(new { token = jwt })
+                    }
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Wrong email or password" });
                 }
-                return Unauthorized(new { errorText = "Wrong email or password" });
+                catch
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
             }
-            return BadRequest(new { errorText = "Login failed" });
+            return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Incorrect data" });
         }
 
+        [Authorize]
         [HttpGet("profile")]
         public IActionResult GetProfile()
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
-
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized();
-
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
             try
             {
                 var user = _usersService.GetUser(token);
                 if (user == null)
-                    return BadRequest(new { errorText = "User not found" });
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = "User not found" });
 
                 return Ok(user);
             }
             catch
             {
-                return BadRequest(new { errorText = "Internal error" });
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
+        [Authorize]
         [HttpPut("profile")]
         public IActionResult EditProfile([FromBody] UserEditDTO model)
         {
-            //try catch for null token
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized();
-
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
             if (ModelState.IsValid)
             {
                 try
@@ -98,27 +112,30 @@ namespace FoodDelivery.Controllers
                     if (_usersService.EditUser(model, token))
                         return Ok();
                 }
-                catch { return BadRequest(new { errorText = "Failed to change user data." }); }
+                catch 
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
             }
-            return BadRequest(new { errorText = "Invalid data." });
-
+            return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Incorrect data" });
         }
 
+        [Authorize]
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
-
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized(new { errorText = "The user is unauthorized." });
-
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
             try
             {
-                _logoutService.Logout(token);
-
+                await _logoutService.Logout(token);
                 return Ok();
             }
-            catch { return BadRequest(new { errorText = "Internal error" }); }
+            catch 
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

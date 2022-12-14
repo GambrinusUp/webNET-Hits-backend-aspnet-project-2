@@ -1,6 +1,8 @@
 ﻿using FoodDelivery.Services;
 using Microsoft.AspNetCore.Mvc;
 using FoodDelivery.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace FoodDelivery.Controllers
 {
@@ -17,44 +19,71 @@ namespace FoodDelivery.Controllers
             _logoutService = logoutService;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult<BasketDTO> GetUserCart()
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized();
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
 
-            var cart = _basketService.GetUserCart(token);
-            if (cart == null)
-                return BadRequest(new {message = "Empty cart"});
-            else
-                return Ok(cart);
-            //return BadRequest();
+            try
+            {
+                var cart = _basketService.GetUserCart(token);
+                if (cart == null)
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Empty cart" });
+                else
+                    return Ok(cart);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
+        [Authorize]
         [HttpPost("dish/{dishId}")]
         public IActionResult AddDish(Guid dishId)
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized();
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
 
-            string status = _basketService.AddDishToCart(dishId, token);
-
-            //var cart = _basketService.GetUserCart(token);
-            return Ok(status);
+            try
+            {
+                string status = _basketService.AddDishToCart(dishId, token);
+                if (status == "user is not exists")
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = status });
+                if (status == "dish is not exists")
+                    return NotFound(new { status = HttpStatusCode.NotFound, message = status });
+                return Ok(new { status = HttpStatusCode.OK, message = status });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
+        [Authorize]
         [HttpDelete("dish/{dishId}")]
         public IActionResult DeleteDish(Guid dishId, bool increase = false) 
         {
             string token = Request.Headers["Authorization"].ToString().Split(' ')[1];
             if (_logoutService.IsUserLogout(token))
-                return Unauthorized();
-
-            string status = _basketService.DeleteDishFromCart(dishId, increase, token);
-
-            return Ok(status);
+                return Unauthorized(new { status = HttpStatusCode.Unauthorized, message = "User is unauthorized" });
+            try
+            {
+                string status = _basketService.DeleteDishFromCart(dishId, increase, token);
+                if (status == "user is not exists")
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = status });
+                if (status == "dish is not found")
+                    return NotFound(new { status = HttpStatusCode.NotFound, message = status });
+                return Ok(new { status = HttpStatusCode.OK, message = status });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

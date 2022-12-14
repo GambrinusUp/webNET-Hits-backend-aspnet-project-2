@@ -27,8 +27,13 @@ namespace FoodDelivery.Services
         {
             var user = _context.GetUserByToken(token);
             var dish = _context.GetDishById(id);
-            if (user == null || dish == null)
-                return "user or dish are not exists";
+            /*if (user == null || dish == null)
+                return "user or dish are not exists";*/
+            if (user == null)
+                return "user is not exists";
+
+            if (dish == null)
+                return "dish is not exists";
 
             var dishInBasket = new DishBasket();
             if (user.Cart.Count != 0)
@@ -90,7 +95,7 @@ namespace FoodDelivery.Services
         {
             var user = _context.GetUserByToken(token);
             if (user == null)
-                return "user not found";
+                return "user is not exists";
 
             var basket = user.Cart;
             foreach (DishBasket dishBasket in user.Cart)

@@ -82,7 +82,6 @@ namespace FoodDelivery.Services
         public UserDTO? GetUser(string token)
         {
             var user = _context.GetUserByToken(token);
-
             if (user == null)
                 return null;
 
@@ -95,6 +94,7 @@ namespace FoodDelivery.Services
             var jsonToken = handler.ReadToken(token);
             var email = ((JwtSecurityToken)jsonToken).Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
             var user = _context.Users.FirstOrDefault(x => x.Email == email);
+
             if (user == null)
                 return false;
 
