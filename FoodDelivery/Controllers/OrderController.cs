@@ -106,7 +106,7 @@ namespace FoodDelivery.Controllers
             }
 
             try
-            {//дрбавить проверку на подтвержденный заказ
+            {
                 string status = _orderService.ConfirmDelivery(token, id);
                 if(status == "orders not found")
                     return NotFound(new { status = HttpStatusCode.NotFound, message = status });

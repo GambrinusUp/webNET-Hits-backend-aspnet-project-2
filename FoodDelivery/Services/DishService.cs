@@ -12,7 +12,7 @@ namespace FoodDelivery.Services
         DishPagedListDTO? GetDishPagedList(DishCategory[] categories, bool vegetarian,
             DishSorting sorting, int page);
         DishDTO? GetDish(Guid id);
-        bool Check(Guid id, string token);
+        string Check(Guid id, string token);
         string Set(Guid id, string token, int rating);
     }
     public class DishService : IDishService
@@ -29,7 +29,6 @@ namespace FoodDelivery.Services
         {
             List<Dish> dishes = new();
 
-            //сделать сортировку
             if (vegetarian == true)
             {
                 //вынести в context
@@ -110,15 +109,19 @@ namespace FoodDelivery.Services
             return ConverterDTO.Dish(dish);
         }
 
-        public bool Check(Guid id, string token)
+        public string Check(Guid id, string token)
         {
             var user = _context.GetUserByToken(token);
             if (user == null)
-                return false;
+                return null;
+
+            var dishcheck = _context.GetDishById(id);
+            if (dishcheck == null)
+                return "dish is not found";
 
             var orders = user.Orders;
             if (orders.Count == 0)
-                return false;
+                return "false";
 
             foreach (var order in orders) 
             { 
@@ -126,12 +129,12 @@ namespace FoodDelivery.Services
                 {
                     if (dish.IdOfDish == id.ToString())
                     {
-                        return true;
+                        return "true";
                     }
                 }
             }
 
-            return false;
+            return "false";
         }
 
         public string Set(Guid id, string token, int rating)
@@ -144,10 +147,11 @@ namespace FoodDelivery.Services
             if (dish == null)
                 return "dish not found";
 
-            if (Check(id, token))
+            if (Check(id, token) == "true")
             {
                 var review = ConverterDTO.Review(user, dish, rating);
                 double avgrating = 0;
+                int count = 0;
                 //проверка на существующий отзыв
                 var reviews = _context.RatingUserReviews.Include(x => x.User).Include(x => x.Dish).ToList();
                 foreach (var userreview in reviews)
@@ -156,12 +160,16 @@ namespace FoodDelivery.Services
                     {
                         userreview.Rating = rating;
                         avgrating = 0;
+                        count = 0;
                         foreach (var reviewscore in reviews)
                         {
                             if (reviewscore.Dish.Id == id)
+                            {
                                 avgrating += reviewscore.Rating;
+                                count++;
+                            }
                         }
-                        avgrating = avgrating / reviews.Count();
+                        avgrating = avgrating / count;
                         dish.Rating = avgrating;
                         _context.SaveChanges();
                         return "rating changed";
@@ -172,15 +180,20 @@ namespace FoodDelivery.Services
                 _context.SaveChanges();
                 avgrating = 0;
                 //reviews = _context.RatingUserReviews.Include(x => x.User).Include(x => x.Dish).ToList();
+                count = 0;
                 foreach (var reviewscore in reviews)
                 {
-                    if(reviewscore.Dish.Id == id)
+                    if (reviewscore.Dish.Id == id)
+                    {
                         avgrating += reviewscore.Rating;
+                        count++;
+                    }
                 }
-                avgrating = avgrating / reviews.Count();
+                avgrating = avgrating / count;
                 dish.Rating = avgrating;
                 _context.SaveChanges();
-                return reviews.Count().ToString();
+                //return reviews.Count().ToString();
+                return "the rating is set";
             }
 
             return "error";

@@ -20,7 +20,7 @@ namespace FoodDelivery.Models.DTO
 
         public double Price { get; set; }
 
-        public ICollection<DishOrder>? Dishes { get; set; }
+        public ICollection<DishBasketDTO>? Dishes { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "The address is too short.")]

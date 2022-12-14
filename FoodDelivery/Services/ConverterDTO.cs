@@ -144,6 +144,19 @@ namespace FoodDelivery.Services
 
         public static OrderDTO? OrderById(Order order)
         {
+            ICollection<DishBasketDTO> resultDishes = new List<DishBasketDTO>();
+            foreach (var dish in order.DishesInOrder)
+            {
+                resultDishes.Add(new DishBasketDTO
+                {
+                    Id = dish.IdOfDish.ToString(),
+                    Name = dish.Name,
+                    Price = dish.Price,
+                    TotalPrice = dish.TotalPrice,
+                    Amount = dish.Amount,
+                    Image = dish.Image
+                });
+            }
             return new OrderDTO
             {
                 Id = order.Id,
@@ -152,7 +165,7 @@ namespace FoodDelivery.Services
                 Status = order.Status,
                 Address = order.Address,
                 Price = order.Price,
-                Dishes = order.DishesInOrder
+                Dishes = resultDishes
             };
         }
 
