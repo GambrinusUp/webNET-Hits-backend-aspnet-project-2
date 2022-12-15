@@ -10,7 +10,7 @@ namespace FoodDelivery.Models
         public Guid Id { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage = "The name is too short.")]
+        [MinLength(1, ErrorMessage = "The name is too short")]
         public string Name { get; set; }
 
         public string? Description { get; set; }

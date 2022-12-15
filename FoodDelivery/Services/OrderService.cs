@@ -43,6 +43,11 @@ namespace FoodDelivery.Services
             order.Price = price;
             user.Orders.Add(order);
             user.Cart.Clear();
+            /*var dishinbasket = _context.DishBasket.ToList();
+            foreach (var entity in dishinbasket)
+            {
+                dishinbasket.Remove(entity);
+            }*/
             _context.SaveChanges();
 
             return new OrderCreateDTO

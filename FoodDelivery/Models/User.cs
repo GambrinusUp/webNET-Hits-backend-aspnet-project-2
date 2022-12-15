@@ -11,7 +11,7 @@ namespace FoodDelivery.Models
         public Guid Id { get; set; }
 
         [Required]
-        [MinLength(1, ErrorMessage = "The fullname is too short.")]
+        [MinLength(1, ErrorMessage = "The fullname is too short")]
         public string FullName { get; set; }
 
         [Required]
@@ -29,7 +29,7 @@ namespace FoodDelivery.Models
         public string Email { get; set; }
 
         [Required]
-        [MinLength(6, ErrorMessage = "The password is too short.")]
+        [MinLength(6, ErrorMessage = "The password is too short")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

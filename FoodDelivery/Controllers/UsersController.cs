@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace FoodDelivery.Controllers
 {
@@ -31,6 +32,12 @@ namespace FoodDelivery.Controllers
         {
             if (ModelState.IsValid)
             {
+                Regex regex = new Regex(@"[0-9]");
+                MatchCollection matches = regex.Matches(model.Password);
+                if (matches.Count < 0)
+                {
+                    return BadRequest(new { status = HttpStatusCode.BadRequest, message = "Password requires at least one digit" });
+                }
                 try
                 {
                     if (_usersService.IsUserUnique(model))
